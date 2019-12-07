@@ -1,0 +1,18 @@
+{
+  "name": "iot",
+  "version": "1.0.0",
+  "description": "central hub of study cafe monitoring system aarhus university",
+  "main": "centralHub.js",
+  "scripts": {
+    "start": "sudo node centralHub.js"
+  },
+  "author": "Mattis Kleine",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mqtt": "^3.0.0",
+    "pigpio": "^2.0.1",
+    "socket.io": "^2.3.0",
+    "sqlite3": "^4.1.0"
+  }
+}

@@ -1,0 +1,22 @@
+{
+	"name": "AU Studyspace Central Hub",
+	"description": "A Raspberry Pi acting as a central hub for all studyspace monitoring systems at AU",
+	"port": 80,
+	"mqttBrokerIP": "test.mosquitto.org",
+	"mqttBrokerPort": 1883,
+	"auStudyspaces": {
+		"abogadeStudycafeUpstairs": 12,
+		"abogadeStudycafeDownstairs": 16,
+		"katrinebergLibrary": 22
+	},
+	"leds": {
+		"green": {
+			"value": false,
+			"gpio": 2
+		},
+		"red": {
+			"value": false,
+			"gpio": 22
+		}
+	}
+}

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+<style>
+body {
+	font-family: "Open Sans", sans-serif;
+	margin: 50px;
+}
+h2 {
+	font-size: 20px;
+	font-weight: 600;
+}
+#mask {
+	position: absolute;
+	opacity: 0;
+	background-color: black;
+	z-index: -10;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	cursor: pointer;
+	transition: opacity .5s;
+}
+.button {
+	margin: 10px 0;
+	padding: 10px;
+	width: 120px;
+	text-align: center;
+	background-color: grey;
+	border-radius: 20px;
+	user-select: none;
+	cursor: pointer;
+	color: white;
+	transition: transform .2s;
+}
+.button:active {
+	transform: scale(0.95);
+}
+#testpic {
+	position: absolute;
+	width: 60vw;
+	top: 50px;
+	left: 20vw;
+	border: 5px solid #444444;
+	border-radius: 40px;
+	transform: scale(0);
+	transition: transform .5s;
+	z-index: 6;
+}
+#pic_sub {
+	position: absolute;
+	top: 80px;
+	left: calc(50vw - 60px);
+	transform: scale(0);
+	transition: transform .5s;
+	z-index: 6;
+	color: white;
+}
+#ledControl {
+	display: none;
+}
+#occupation_wrapper {
+	width: 700px;
+	height: 300px;
+	position: absolute;
+	top: 250px;
+	left: 500px;
+	font-family: 'Open Sans', sans-serif;
+	opacity: 0;
+	z-index: -10;
+	transition: opacity .5s;
+}
+.weekdays_wrapper {
+	position: absolute;
+	border: 3px solid #bbbbbb;
+	border-radius: 30px;
+	left: 0;
+	top: 0;
+	height: 300px;
+	width: 150px;
+}
+.weekday {
+	width: calc(100% - 40px);
+	margin: 10px 0;
+	padding: 13px 20px;
+	user-select: none;
+}
+.weekday:hover {
+	background-color: #cccccc;
+	cursor: pointer;
+}
+.weekday_active {
+	background-color: #dddddd;
+}
+#monday {
+	margin: 0;
+	padding-top: 23px;
+	border-top-left-radius: 26px;
+	border-top-right-radius: 26px;
+}
+#friday {
+	border-bottom-left-radius: 26px;
+	border-bottom-right-radius: 26px;
+	padding-bottom: 23px;
+}
+#plot_base {
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+	width: 75%;
+	z-index: 2;
+}
+.plot_segment {
+	--width: 36px;
+	position: absolute;
+	bottom: 42px;
+	background-color: #2b89ef;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	width: var(--width);
+	text-align: center;
+	color: white;
+	height: 40px;
+	font-weight: 600;
+	transition: padding 1s;
+}
+#t8 {
+	right: calc((var(--width) + 4px) * 11 + 14px);
+}
+#t9 {
+	right: calc((var(--width) + 4px) * 10 + 14px);
+}
+#t10 {
+	right: calc((var(--width) + 4px) * 9 + 14px);
+}
+#t11 {
+	right: calc((var(--width) + 4px) * 8 + 14px);
+}
+#t12 {
+	right: calc((var(--width) + 4px) * 7 + 14px);
+}
+#t13 {
+	right: calc((var(--width) + 4px) * 6 + 14px);
+}
+#t14 {
+	right: calc((var(--width) + 4px) * 5 + 14px);
+}
+#t15 {
+	right: calc((var(--width) + 4px) * 4 + 14px);
+}
+#t16 {
+	right: calc((var(--width) + 4px) * 3 + 14px);
+}
+#t17 {
+	right: calc((var(--width) + 4px) * 2 + 14px);
+}
+#t18 {
+	right: calc((var(--width) + 4px) + 14px);
+}
+#average_time {
+	position: absolute;
+	top: 10px;
+	left: 180px;
+}
+
+</style>
+</head>
+<body onload="startScript()">
+
+<div id="mask" onclick="mask(0)"></div>
+<h1>Jet Set Control Center</h1>
+<div id="ledControl">
+	<p>Green LED</p>
+	<input type="checkbox" id="led_green">
+	<p>Red LED</p>
+	<input type="checkbox" id="led_red">
+</div>
+<div>
+	<h2>Abogade Study Cafe Upstairs</h2>
+	<p id="room1_placeholder">0</p>
+	<div id="pic_button_1" class="button" onclick="getPicture(1); mask(1)">live picture</div>
+	<div id="calendar_button_1" class="button" onclick="openCalendar(1)">open calendar</div>
+</div>
+
+<div>
+	<h2>Abogade Study Cafe Downstairs</h2>
+	<p id="room2_placeholder">0</p>
+	<div id="pic_button_2" class="button" onclick="getPicture(2); mask(1)">live picture</div>
+	<div id="calendar_button_2" class="button" onclick="openCalendar(2)">open calendar</div>
+</div>
+
+<div>
+	<h2>Katrineberg Library</h2>
+	<p id="room3_placeholder">0</p>
+	<div id="pic_button_3" class="button" onclick="getPicture(3); mask(1)">live picture</div>
+	<div id="calendar_button_3" class="button" onclick="openCalendar(3)">open calendar</div>
+</div>
+
+<div id="pic_sub">current date & time</div>
+<img src="testimg.jpg" alt="testimg" id="testpic">
+
+<div id="occupation_wrapper">
+	<div class="weekdays_wrapper">
+		<div class="weekday weekday_active" id="monday" onclick="setActive('monday')">Mondays</div>
+		<div class="weekday" id="tuesday" onclick="setActive('tuesday')">Tuesdays</div>
+		<div class="weekday" id="wednesday" onclick="setActive('wednesday')">Wednesdays</div>
+		<div class="weekday" id="thursday" onclick="setActive('thursday')">Thursdays</div>
+		<div class="weekday" id="friday" onclick="setActive('friday')">Fridays</div>
+	</div>
+	<img src="images/plot_base.svg" alt="base of plot" id="plot_base">
+	<div class="plot_segment" id="t8"></div>
+	<div class="plot_segment" id="t9"></div>
+	<div class="plot_segment" id="t10"></div>
+	<div class="plot_segment" id="t11"></div>
+	<div class="plot_segment" id="t12"></div>
+	<div class="plot_segment" id="t13"></div>
+	<div class="plot_segment" id="t14"></div>
+	<div class="plot_segment" id="t15"></div>
+	<div class="plot_segment" id="t16"></div>
+	<div class="plot_segment" id="t17"></div>
+	<div class="plot_segment" id="t18"></div>
+	<div id="average_time">In average, people spend 55 minutes in this room</div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script>
+
+var called = 0;
+
+var mon = [];
+var tue = [];
+var wed = [];
+var thu = [];
+var fri = [];
+
+let date = new Date();
+let day = ("0" + date.getDate()).slice(-2);
+let month = ("0" + (date.getMonth() + 1)).slice(-2);
+let year = date.getFullYear();
+let hours = date.getHours();
+let minutes = date.getMinutes();
+let seconds = date.getSeconds();
+function b64(e) {
+	var t="";
+	var n=new Uint8Array(e);
+	var r=n.byteLength;
+	for(var i=0;i<r;i++) {
+		t+=String.fromCharCode(n[i])
+	}
+	return window.btoa(t)
+}
+var socket = io();
+
+window.addEventListener("load", function(){
+	var led_green_box = document.getElementById("led_green");
+	var led_red_box = document.getElementById("led_red");
+	led_green_box.addEventListener("change", function() {
+		socket.emit("led_green", Number(this.checked));
+	});
+	led_red_box.addEventListener("change", function() {
+		socket.emit("led_red", Number(this.checked));
+	});
+});
+
+socket.on('image', function(info) {
+	if (info.image) {
+		document.getElementById("plot_base").src = 'data:image/png;base64,' + info.buffer;
+	}
+});
+
+socket.on('led_green', function (data) {
+	document.getElementById("led_green").checked = data;
+	socket.emit("led_green", data);
+});
+
+socket.on('led_red', function (data) {
+	document.getElementById("led_red").checked = data;
+	socket.emit("led_red", data);
+});
+
+socket.on('sendPicture', function (info) {
+	if(called == 1) {
+		called = 0;
+		if (info.image) {
+			document.getElementById("testpic").src = 'data:image/jpeg;base64,' + info.buffer;
+		}
+		date = new Date();
+		day = ("0" + date.getDate()).slice(-2);
+		month = ("0" + (date.getMonth() + 1)).slice(-2);
+		year = date.getFullYear();
+		hours = date.getHours();
+		minutes = date.getMinutes();
+		seconds = date.getSeconds();
+		document.getElementById("pic_sub").innerHTML = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+		document.getElementById("testpic").style.transform = "scale(1)";
+		document.getElementById("pic_sub").style.transform = "scale(1)";
+	}
+});
+
+socket.on('room1', function (data) {
+	document.getElementById("room1_placeholder").innerHTML = data;
+});
+
+socket.on('room2', function (data) {
+	document.getElementById("room2_placeholder").innerHTML = data;
+});
+
+socket.on('room3', function (data) {
+	document.getElementById("room3_placeholder").innerHTML = data;
+});
+
+socket.on('sendProg', function (monS, tueS, wedS, thuS, friS, avg) {
+	mon = monS;
+	tue = tueS;
+	wed = wedS;
+	thu = thuS;
+	fri = friS;
+	document.getElementById("average_time").innerHTML = "In average, people spend " + avg + " minutes in this room";
+	setActive("monday");
+});
+
+function getPicture(room) {
+	called = 1;
+	socket.emit("getPicture", room);
+}
+
+function openCalendar(room) {
+	document.getElementById("occupation_wrapper").style.opacity = 1;
+	document.getElementById("occupation_wrapper").style.zIndex = 4;
+	socket.emit("getProg", room);
+}
+
+function mask(status) {
+	if (status == 1) {
+		document.getElementById("mask").style.opacity = 0.7;
+		document.getElementById("mask").style.zIndex = 5;
+	}
+	if (status == 0) {
+		document.getElementById("mask").style.opacity = 0;
+		document.getElementById("mask").style.zIndex = -5;
+		document.getElementById("testpic").style.transform = "scale(0)";
+		document.getElementById("pic_sub").style.transform = "scale(0)";
+	}
+}
+
+function startScript() {
+	socket.emit("getImage", "");
+	setActive("monday");
+}
+function setActive(weekday) {
+	var weekdays = document.getElementsByClassName("weekday");
+	for (var i = 0; i < weekdays.length; i++) {
+		weekdays[i].classList.remove("weekday_active");
+	}
+	document.getElementById(weekday).classList.add("weekday_active");
+	updateValue(weekday);
+}
+
+function updateValue(weekday) {
+	var h;
+	if (weekday == "monday") {
+		h = mon;
+	} else if (weekday == "tuesday") {
+		h = tue;
+	} else if (weekday == "wednesday") {
+		h = wed;
+	} else if (weekday == "thursday") {
+		h = thu;
+	} else if (weekday == "friday") {
+		h = fri;
+	}
+
+	var j = 8;
+	for (var i = 0; i <11; i++) {
+		if (h[i] >= 5) {
+			document.getElementById("t" + j).style.paddingTop = (h[i]-2)*2 + "px";
+			document.getElementById("t" + j).innerHTML = h[i];
+			document.getElementById("t" + j).style.height = "40px";
+			if (h[i] <= 7) {
+				document.getElementById("t" + j).style.backgroundColor = "#87e6bf";
+			}
+			if (h[i] > 7) {
+				document.getElementById("t" + j).style.backgroundColor = "#87edab";
+			}
+			if (h[i] > 10) {
+				document.getElementById("t" + j).style.backgroundColor = "#f2eb83";
+			}
+			if (h[i] > 15) {
+				document.getElementById("t" + j).style.backgroundColor = "#f2d683";
+			}
+			if (h[i] > 20) {
+				document.getElementById("t" + j).style.backgroundColor = "#ed9372";
+			}
+			if (h[i] > 25) {
+				document.getElementById("t" + j).style.backgroundColor = "#ed7272";
+			}
+			if (h[i] > 30) {
+				document.getElementById("t" + j).style.backgroundColor = "#db4f74";
+			}
+		} else {
+			document.getElementById("t" + j).style.paddingTop = "0";
+			document.getElementById("t" + j).style.height = "0";
+			document.getElementById("t" + j).innerHTML = "";
+		}
+		j++;
+	}
+}
+
+</script>
+</html>
+</body>
+</html>
